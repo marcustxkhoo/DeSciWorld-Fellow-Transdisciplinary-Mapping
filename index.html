@@ -2,104 +2,329 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>DeSciWorld Transdisciplinary Mapping</title>
+  <title>Transdisciplinary Mapping</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
     body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       margin: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-        sans-serif;
-      background: #f5f5f7;
+      padding: 0;
+      background: #f5f5f5;
       color: #222;
+    }
+
+    .page {
       display: flex;
-      justify-content: center;
-      align-items: flex-start;
       min-height: 100vh;
-      padding: 24px;
+      box-sizing: border-box;
+      padding: 16px;
+      gap: 16px;
     }
 
-    .container {
-      max-width: 800px;
-      width: 100%;
+    .sidebar {
+      width: 240px;
       background: #ffffff;
-      border-radius: 16px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-      padding: 24px 24px 32px;
+      border-radius: 8px;
+      padding: 14px 16px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
     }
 
-    h1 {
-      margin-top: 0;
-      margin-bottom: 8px;
-      font-size: 1.6rem;
+    .sidebar h1 {
+      font-size: 16px;
+      margin: 0 0 4px 0;
     }
 
-    p {
-      margin-top: 4px;
-      margin-bottom: 8px;
+    .sidebar p {
+      font-size: 13px;
+      margin: 0 0 8px 0;
       line-height: 1.4;
     }
 
-    .instructions {
-      font-size: 0.9rem;
-      color: #555;
-      margin-bottom: 16px;
+    .filter-group {
+      margin-top: 8px;
+      border-top: 1px solid #eee;
+      padding-top: 8px;
+    }
+
+    .filter-group h2 {
+      font-size: 13px;
+      margin: 0 0 6px 0;
+    }
+
+    .filter-group label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      margin-bottom: 4px;
+      cursor: pointer;
+    }
+
+    .filter-group input[type="checkbox"] {
+      width: 14px;
+      height: 14px;
+    }
+
+    .main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .canvas-wrapper {
+      background: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+      padding: 12px;
+      box-sizing: border-box;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
 
     canvas {
-      display: block;
-      margin: 16px auto;
-      border-radius: 12px;
-      background: #fafafa;
       border: 1px solid #ddd;
+      border-radius: 4px;
+      background: #fafafa;
+      max-width: 100%;
+      height: auto;
     }
 
     .legend {
-      font-size: 0.9rem;
-      margin-top: 8px;
-      color: #444;
+      font-size: 12px;
+      color: #555;
+      margin-top: 4px;
     }
 
-    .legend p {
-      margin: 2px 0;
+    .phrases-section {
+      background: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+      padding: 12px 16px 14px;
+      box-sizing: border-box;
     }
 
-    .hint {
-      margin-top: 12px;
-      font-size: 0.85rem;
-      color: #777;
+    .phrases-section h2 {
+      font-size: 14px;
+      margin: 0 0 8px 0;
     }
 
-    @media (max-width: 700px) {
-      canvas {
+    .phrases-help {
+      font-size: 12px;
+      color: #555;
+      margin-bottom: 8px;
+    }
+
+    .phrases-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .phrase-btn {
+      border-radius: 999px;
+      border: 1px solid #ccc;
+      padding: 4px 10px;
+      font-size: 12px;
+      background: #f8f8f8;
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s, transform 0.1s;
+    }
+
+    .phrase-btn:hover {
+      background: #ececec;
+    }
+
+    .phrase-btn.active {
+      background: #222;
+      color: #fff;
+      border-color: #222;
+      transform: translateY(1px);
+    }
+
+    /* Modal */
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0,0,0,0.35);
+      z-index: 1000;
+    }
+
+    .modal {
+      background: #ffffff;
+      border-radius: 8px;
+      padding: 16px 18px 14px;
+      width: 320px;
+      max-width: calc(100% - 32px);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+      box-sizing: border-box;
+    }
+
+    .modal h3 {
+      margin: 0 0 8px 0;
+      font-size: 15px;
+    }
+
+    .modal label {
+      display: block;
+      font-size: 13px;
+      margin-bottom: 4px;
+    }
+
+    .modal input[type="text"] {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 6px 8px;
+      font-size: 13px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      margin-bottom: 8px;
+    }
+
+    .modal .tag-options {
+      font-size: 13px;
+      margin-bottom: 10px;
+    }
+
+    .modal .tag-options label {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin-bottom: 4px;
+      cursor: pointer;
+    }
+
+    .modal .buttons {
+      display: flex;
+      justify-content: flex-end;
+      gap: 6px;
+      margin-top: 4px;
+    }
+
+    .btn {
+      border-radius: 4px;
+      border: 1px solid transparent;
+      padding: 5px 10px;
+      font-size: 13px;
+      cursor: pointer;
+      background: #eee;
+    }
+
+    .btn-primary {
+      background: #222;
+      color: #fff;
+    }
+
+    .btn-danger {
+      background: #e74c3c;
+      color: #fff;
+    }
+
+    .btn:hover {
+      opacity: 0.9;
+    }
+
+    @media (max-width: 800px) {
+      .page {
+        flex-direction: column;
+      }
+      .sidebar {
         width: 100%;
-        height: auto;
       }
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>DeSciWorld Transdisciplinary Mapping</h1>
-    <p class="instructions">
-      Click anywhere on the plane to add a labelled point.
-      Click an existing point to rename it or delete it.
-      Drag a point to move it around.
-    </p>
+  <div class="page">
+    <aside class="sidebar">
+      <h1>Transdisciplinary Mapping</h1>
+      <p>
+        Click on the plane to add a point.  
+        • Drag an existing point to move it.  
+        • Click a point to rename or delete it.
+      </p>
 
-    <!-- 🔹 Our plotting surface -->
-    <canvas id="mapCanvas" width="600" height="600"></canvas>
+      <div class="filter-group">
+        <h2>Filter by Tag</h2>
+        <label>
+          <input type="checkbox" id="filterPersonal" checked />
+          Personal Trait
+        </label>
+        <label>
+          <input type="checkbox" id="filterResearch" checked />
+          Research Project Trait
+        </label>
+        <label>
+          <input type="checkbox" id="filterKeyPhrase" checked />
+          Project Key Phrase
+        </label>
+      </div>
+    </aside>
 
-    <div class="legend">
-      <p><strong>X-axis:</strong> Techno ⟶ Poetics</p>
-      <p><strong>Y-axis:</strong> Local ⟶ Cosmo</p>
-    </div>
+    <main class="main">
+      <div class="canvas-wrapper">
+        <canvas id="canvas" width="600" height="600"></canvas>
+      </div>
+      <div class="legend">
+        Techno ⟶ Poetics (left to right) &nbsp;|&nbsp; Local ⟶ Cosmo (top to bottom)
+      </div>
 
-    <p class="hint">
-      Tip: To delete a point, click it and type <strong>DELETE</strong> in the prompt.
-    </p>
+      <section class="phrases-section">
+        <h2>Project Key Phrases</h2>
+        <p class="phrases-help">
+          Click a phrase below to activate it, then click on the plane to place a point.
+          Points from this section are tagged as <strong>Project Key Phrase</strong>.
+        </p>
+        <div class="phrases-grid" id="phrasesContainer">
+          <!-- Buttons inserted by script.js -->
+        </div>
+      </section>
+    </main>
   </div>
 
-  <!-- 🔹 Link to the external JS file -->
+  <!-- Modal for adding/editing points -->
+  <div class="modal-backdrop" id="modalBackdrop">
+    <div class="modal">
+      <h3 id="modalTitle">Point Details</h3>
+
+      <label for="modalLabelInput">Label</label>
+      <input type="text" id="modalLabelInput" />
+
+      <div class="tag-options">
+        <div>Tag</div>
+        <label>
+          <input type="radio" name="modalTag" value="Personal Trait" checked />
+          Personal Trait
+        </label>
+        <label>
+          <input type="radio" name="modalTag" value="Research Project Trait" />
+          Research Project Trait
+        </label>
+        <label id="modalKeyPhraseOption" style="display:none;">
+          <input type="radio" name="modalTag" value="Project Key Phrase" />
+          Project Key Phrase
+        </label>
+      </div>
+
+      <div class="buttons">
+        <button class="btn btn-danger" id="modalDeleteBtn" style="display:none;">
+          Delete Point
+        </button>
+        <button class="btn" id="modalCancelBtn">Cancel</button>
+        <button class="btn btn-primary" id="modalSaveBtn">Save</button>
+      </div>
+    </div>
+  </div>
+
   <script src="script.js"></script>
 </body>
 </html>
