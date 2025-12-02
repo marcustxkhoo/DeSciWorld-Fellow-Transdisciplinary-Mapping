@@ -1,30 +1,40 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Transdisciplinary Map</title>
-  <style>
-    body { margin: 0; font-family: sans-serif; }
-    #canvas {
-      border: 1px solid #ddd;
-      display: block;
-      margin: 0 auto;
-    }
-    .axis-label {
-      text-align: center;
-      margin-top: 10px;
-    }
-  </style>
+<meta charset="UTF-8">
+<title>Transdisciplinary Map</title>
+<style>
+  body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: sans-serif;
+    margin: 40px;
+  }
+
+  #canvas {
+    border: 1px solid #333;
+    background-color: #fafafa;
+  }
+
+  .label {
+    font-size: 16px;
+    margin: 8px;
+  }
+</style>
 </head>
+
 <body>
+
+<h2>Transdisciplinary Engagement Map</h2>
+
+<div class="label">Click anywhere on the plane to map your position.</div>
 
 <canvas id="canvas" width="600" height="600"></canvas>
 
-<div class="axis-label">Technopoetics →</div>
-<div class="axis-label" style="position: absolute; top: 50%; left: 20px; transform: rotate(-90deg);">
-  Local ↑ | Cosmo ↓
-</div>
+<script>
+  const canvas = document.getElementById("canvas");
+  const ctx = canvas.getContext("2d");
 
-<script src="script.js"></script>
-</body>
-</html>
+  function
+
